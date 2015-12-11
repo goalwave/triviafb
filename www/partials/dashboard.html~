@@ -1,0 +1,34 @@
+<ion-view>
+    <ion-header-bar class="bar-header bar-positive">
+        <div class="title uppercase">Welcome</div>
+        <button class="button button-clear" ng-click="logout()">Logout</button>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list">
+            <div class="profile-container">
+                <!--<div id="em-profile" class="item">-->
+                    <!-- <img src="img/ionic.png"> -->
+                    <div ng-if="user.profilePic" class="profile-pic" ng-style="{'background-image': 'url(' + user.profilePic + ')'}"></div>
+                    <div ng-if="!user.profilePic" class="profile-pic" style="background-image: url(img/profile-pic-default.png)"></div>
+                <!--</div>-->
+                <div id="myDiv">
+                    <div id="color">
+                        <div id="effect"></div>
+                    </div>
+                </div>
+                <div class="profile-background" ng-style="{'background-image': 'url(' + user.profilePic + ')'}"></div>
+            </div>
+            <div class="list">
+                <label class="item item-input field-disabled">
+                    <span class="input-label">Email</span>
+                    <input ng-model="user.email" type="text" placeholder="user@gmail.com">
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Display Name</span>
+                    <input ng-model="user.name" type="text" placeholder="Chanu Sukarno">
+                </label>
+
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

@@ -1,0 +1,94 @@
+angular.module('triviafb')
+
+.controller('AppCtrl', function($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS) {
+  $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
+    AuthService.logout();
+    $state.go('login');
+    var alertPopup = $ionicPopup.alert({
+      title: 'Session Lost!',
+      template: 'Sorry, You have to login again.'
+    });
+  });
+ 
+})
+
+
+
+.controller('welcomeCtrl', function ($scope, $state, $cookieStore, $location, AuthService) {
+    $scope.user = {};
+
+    $scope.useCredentials = function() {
+	user = $cookieStore.get('userInfo');
+	
+	$http.defaults.headers.common['Authorization'] = "Bearer " + token;
+	$http.defaults.headers.common['X-Username'] = email;
+    }
+    
+    // FB Login
+    $scope.fbLogin = function () {
+	var fbUser = AuthService.fbLogin().then(function(){
+	    $state.go('dashboard');
+	}, function(error){
+
+	});
+    };
+    // END FB Login
+
+    $scope.gRenderButton = function(){
+	gapi.load('auth2', function(){
+	    auth2 = gapi.auth2.init({
+		client_id: '830857489159-6bh6of75j7c3d9hsast10maqmv7cs2iv.apps.googleusercontent.com'
+	    });
+	    
+	});
+	
+
+
+	gapi.signin2.render('my-signin2', {
+            'scope': 'email',
+            'width': 250,
+            'height': 40,
+            'longtitle': true,
+            'theme': 'dark',
+	    'onsuccess': $scope.gOnSuccess,
+	    'onfailure': $scope.gOnFailure
+	});
+
+
+	    
+
+    }
+    
+    $scope.gOnSuccess = function(googleUser){
+	AuthService.gOnSuccess(googleUser);
+
+    }
+
+    $scope.gOnFailure = function(error){
+	console.log(error);
+    }
+
+    $scope.fbAsyncInit = function(){
+        FB.init({
+            appId: '479740112204868', // Replace the App ID with yours
+            status: true, // check login status
+            cookie: true, // enable cookies to allow the server to access the session
+            xfbml: true  // parse XFBML
+        });
+    }
+
+})
+
+// Dashboard/Profile Controller
+.controller('dashboardCtrl', function ($scope, $window, $state, $cookieStore, Game, AuthService) {
+    // Set user details
+    $scope.user = $cookieStore.get('userInfo');
+
+    
+    // Logout user
+    $scope.logout = function () {
+	AuthService.logout();
+	$state.go('welcome');
+
+    };
+});
